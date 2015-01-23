@@ -1,0 +1,68 @@
+Polynomials
+ - Clusters of 0+ Groupings of 1+ Terms each
+
+Term
+ - Have 1-sign
+ 	- Optional for 1st Term in Group; default = '+'
+ 	- If given, the Term must include 1 coeffiencient and/or 1-variable
+ - Have 1-coefficient of 0+ digits
+ 	- Optional; default = '1'
+ - Have 1-vairiable of 1-digit
+ 	- Optional; not having it changes coefficient into a constant
+ - Have 1-exponant consisting of a '^' followed by a numerial
+ 	- numerial must be positive
+ - Order
+ 	Sign
+ 	Coeffiecient
+ 	Variable
+ 	Exponant
+
+Grouping
+ - Terms can be grouped by parens or '()'
+ - Polynomials with no Parens are 1 Group
+ - Rules:
+ 	- Come in pairs, one '(' & one ')'
+ 	- Groups can contain 0+ Groups
+ 	- ( can be preceeded by:
+ 		Sign
+ 		Coefficient
+ 		Operator */^+-
+ 		Paren ()
+ 	- ( can be followed by:
+ 		Sign
+ 		Coefficent
+ 		Variable
+ 		Paren ()
+ 	- ) can be preceeded by:
+ 		Constant (Coefficient)
+ 		Variable
+ 		Exponant
+ 		Paren ()
+ 	- ) can be followed by:
+ 		Sign
+ 		Variable
+ 		Operator */^+-
+ 		Paren ()
+
+Flow:
+ - Test each character:
+ 	( = start of group
+ 		Increment Group Level + 1
+ 	) = end of group
+ 		Decrement Group Level - 1
+ 	n = Coeffiecient, Constant, or Exponant
+ 		default = Constant
+ 		follow ^ = Exponant
+ 		preceed L = Coefficient
+ 	L = Variable
+ 	+ = Operator
+ 		default = Operator
+ 		preceed n = Sign
+ 	- = Operator
+ 		default = Operator
+ 		preceed n = Sign
+ 	* = Operator
+ 	/ = Operator
+ 	^ = Operator
+ 		default = Operator
+ 	
