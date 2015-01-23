@@ -1,6 +1,7 @@
 # Polynomial Parcer
 #
 #
+#
 
 # Define global variables
 polynomial = []
