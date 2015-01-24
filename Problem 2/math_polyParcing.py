@@ -57,7 +57,17 @@ def polyParce(polynomial_str):
 
         # SIGN
         if char == "+" or char == "-" or char == " ":
-            if char_Last != 'Exponant':
+            printDebug("Sign = " + char)
+            if char_Last == 'Sign' and char != " ":
+                # Signs back to back are multiplied to achieve new sign
+                temp = int(char + '1') * int(char_Sign + '1')
+                printDebug("Fixing Signs!")
+                printDebug("char: " + char + ", char_Sign: " + char_Sign + ", new value: " + str(temp))
+                if temp == 1:
+                    char_Sign = '+'
+                else:
+                    char_Sign = '-'
+            elif char_Last != 'Exponant':
                 # TO DO: Signs always start a new Term, so create poly and clear old values
                 if isCoef or char_Expo or char_Vari:
                     poly = poly + 1
@@ -79,6 +89,7 @@ def polyParce(polynomial_str):
                 char_Vari = ''
                 char_Last = 'Sign'
             else:
+                # If the Sign is first, then it simply is the sign of the first coefficent
                 isSign = True
                 char_Expo = '-'
 
@@ -126,7 +137,7 @@ def polyParce(polynomial_str):
                 isSign = True
                 char_Sign = '+'
                 printDebug(str(n) + ": Assigning Coefficient Sign = +")
-                
+
             if isVari:
                 # If isVari is True, the number is the Exponant
                 isExpo = True
@@ -137,7 +148,7 @@ def polyParce(polynomial_str):
                 isCoef = True
                 char_Coef = char_Coef + char
                 printDebug(str(n) + ": Coefficient = " + char_Coef)
-
+                
             char_Last = 'Digit'
 
         # CHARACTER
@@ -148,7 +159,7 @@ def polyParce(polynomial_str):
                 isSign = True
                 char_Sign = '+'
                 printDebug("Char " + str(n) + ": Assigning Variable Sign = +")
-
+               
             if isVari:
                 # If isVari is True, the variable has already been defined
                 # Variables are only one character
@@ -158,7 +169,7 @@ def polyParce(polynomial_str):
                 # char must be equal to char_LastVari, only 1 variable allowed
                 printWarning("Char " + str(n) + ": Multiple variables detected across Terms - only one variable allowed! Stopping.")
                 break
-            
+
             isVari = True
             isDot = False # Reset for Exponant tests
             char_Vari = char
@@ -179,8 +190,15 @@ def polyParce(polynomial_str):
 def definePolyTerm(poly,char_Sign,char_Coef,char_Vari,char_FirstVari,char_Expo):
 # Fix definitions if there are missing parts
     
+    if char_Coef != '' and char_Expo != '' and char_Vari == '':
+        # The Term is #^# --> Calc
+        temp = float(char_Coef) ** int(char_Expo)
+        char_Coef = str(temp)
+        char_Expo = '1'
+
     if char_Coef == '':
         char_Coef = '1'
+        
     char_Coef = char_Sign + char_Coef
     
     if char_Expo == '':

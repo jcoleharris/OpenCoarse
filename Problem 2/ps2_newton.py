@@ -8,6 +8,10 @@
 import math_polyParcing
 polyParce = math_polyParcing.polyParce
 
+# Import Debugger
+#
+import pdb
+
 # Define main 
 def main():
     # Determine which Problem Set to do
@@ -131,17 +135,23 @@ def compute_deriv(poly):
     while term_count > 1:
         term_value = poly[term_count] * term_count
 
-        if term_value != (len(poly) - 1):
+        if term_value != 0:
             if term_value < 0:
                 # Negative Term
-                poly_new = poly_new + "- "
-            elif term_value > 0:
+                if term_count == len(poly) - 1:
+                    # If the first coefficent is negative, place the sign next to it
+                    poly_new = poly_new + "-"
+                else:
+                    # Otherwise treat as an operator (add a space)
+                    poly_new = poly_new + "- "
+            elif term_value > 0 and term_count != len(poly) - 1:
                 poly_new = poly_new + "+ "
 
-        term_new = str(abs(term_value)) + "x"
-        if (term_count - 1) > 1:
-            term_new = term_new + "^" + str(term_count - 1) + " "
-        poly_new = poly_new + term_new
+            term_new = str(abs(term_value)) + "x"
+            if (term_count - 1) > 1:
+                term_new = term_new + "^" + str(term_count - 1) + " "
+            poly_new = poly_new + term_new
+
         term_count = term_count - 1
 
     return poly_new
