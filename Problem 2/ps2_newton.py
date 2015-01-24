@@ -104,7 +104,7 @@ def probSet_2():
     # Evaluate the derivative of the polynomial
     poly_new = compute_deriv(temp)
 
-    print("The solution = " + poly_new)
+    print("The derivative = " + poly_new)
     
     #Done
     print("\n\t!!! Problem Set 2 Completed !!!\n")
@@ -175,7 +175,10 @@ def probSet_3():
     epsilon = raw_input("epsilon = ")
     
     # Evaluate the derivative
-    compute_root(polynomial_str, x_0, epsilon)
+    tup = compute_root(polynomial_str, x_0, epsilon)
+
+    # Print Results
+    print("Solution: (" + str(tup[0]) + ", " + str(tup[1]) + ")")
 
     #Done
     print("\n\t!!! Problem Set 3 Completed !!!\n")
@@ -206,14 +209,13 @@ def compute_root(poly, x_0, epsilon):
     # Process the polynomial
     math_polyParcing.polynomial = []
     poly_0 = polyParce(poly)
-    print("poly_0:",poly_0,type(poly_0))
+    print("Polynomial = " + str(poly))
 
     # Find the derivative of the poly
-    temp = compute_deriv(poly_0)
-    print(temp)
+    deriv = compute_deriv(poly_0)
     math_polyParcing.polynomial = []
-    poly_1 = polyParce(temp)
-    print("poly_1:",poly_1,type(poly_1))
+    poly_1 = polyParce(deriv)
+    print("Derivative Polynomial = " + str(deriv))
     
     # Define variables
     e_low = -1*float(epsilon)
@@ -223,26 +225,29 @@ def compute_root(poly, x_0, epsilon):
     iterations = 0
     iterate = True
     
-    print(e_low,e_high)
+    #print(e_low,e_high)
 
     # Find the root
     while iterate:
-        func_value = evaluate_poly(poly_0, x_0)
-        iterations += 1
-
+        func_value = evaluate_poly(poly_0, iterations)
+        
         if (func_value >= e_low) and (func_value <= e_high):
             iterate = False
         else:
-            evalu = evaluate_poly(polyParce(deriv), func_value)
-            print(evalu,type(evalu))
+            evalu = evaluate_poly(poly_1, func_value)
+            print("\tEvaluate: " + str(evalu))
             x_1 = func_value - func_value / evalu
 
-        print(e_low,e_high,x_0,x_1,func_value,iterations)
-        func_value = x_1
+        print("Iter: " + str(iterations) + " Guess = " + str(func_value))
+        #x_0 = x_1
 
+        #Pause flow to check debug prints
         raw_input("Continue?")
+        
+        iterations += 1
 
-    print(func_value, iterations)
+    returnTuple = [func_value, iterations]
+    return returnTuple
     
     #Done
     return

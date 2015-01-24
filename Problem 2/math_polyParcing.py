@@ -221,7 +221,7 @@ def definePolyTerm(poly,char_Sign,char_Coef,char_Vari,char_FirstVari,char_Expo):
     polyCoe = float(char_Coef)
 
     # Print the Term
-    print("\tTerm "+ str(poly) +" = " + char_Coef + char_Vari + "^" + char_Expo)
+    #print("\tTerm "+ str(poly) +" = " + char_Coef + char_Vari + "^" + char_Expo)
 
     polyLocError = False
     try:
