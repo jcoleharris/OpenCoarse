@@ -209,44 +209,33 @@ def compute_root(poly, x_0, epsilon):
     # Process the polynomial
     math_polyParcing.polynomial = []
     poly_0 = polyParce(poly)
-    print("Polynomial = " + str(poly))
+    print("Polynomial = " + str(poly_0))
 
     # Find the derivative of the poly
     deriv = compute_deriv(poly_0)
     math_polyParcing.polynomial = []
     poly_1 = polyParce(deriv)
-    print("Derivative Polynomial = " + str(deriv))
+    print("Derivative Polynomial = " + str(poly_1))
     
     # Define variables
-    e_low = -1*float(epsilon)
-    e_high = float(epsilon)
+    epsilon = float(epsilon)
     x_0 = float(x_0)
-    x_1 = 0
-    iterations = 0
+    iterations = 1
     iterate = True
-    
-    #print(e_low,e_high)
 
     # Find the root
     while iterate:
-        func_value = evaluate_poly(poly_0, iterations)
-        
-        if (func_value >= e_low) and (func_value <= e_high):
+        x0_value = evaluate_poly(poly_0, x_0)
+        if abs(x0_value) <= epsilon:
             iterate = False
         else:
-            evalu = evaluate_poly(poly_1, func_value)
-            print("\tEvaluate: " + str(evalu))
-            x_1 = func_value - func_value / evalu
+            iterations += 1
+            xn_value = x_0 - evaluate_poly(poly_0, x_0) / evaluate_poly(poly_1, x_0)
+            print(xn_value,iterations)
+            x_0 = xn_value
 
-        print("Iter: " + str(iterations) + " Guess = " + str(func_value))
-        #x_0 = x_1
-
-        #Pause flow to check debug prints
-        raw_input("Continue?")
-        
-        iterations += 1
-
-    returnTuple = [func_value, iterations]
+    print(x0_value,iterations)
+    returnTuple = [x0_value, iterations]
     return returnTuple
     
     #Done
