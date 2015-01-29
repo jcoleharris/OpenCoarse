@@ -37,6 +37,27 @@ def choose_word(wordlist):
     """
     return random.choice(wordlist)
 
+def word_tuple(word):
+    tup = []
+    guess = []
+    for i in range(len(word)):
+        tup.append(word[i])
+        guess.append("_")
+
+    return tup, guess
+
+def define_tuple(number=0, default=' ', sliceDefault=False):
+    tup = []
+    if sliceDefault:
+        for i in range(len(default) - 1):
+            tup.append(default[i])
+    else:
+        for i in range(number - 1):
+            tup.append(default)
+            
+    return tup
+
+
 # end of helper code
 # -----------------------------------
 
@@ -44,6 +65,35 @@ def choose_word(wordlist):
 # the wordlist variable so that it can be accessed from anywhere
 # in the program
 wordlist = load_words()
-print(choose_word(wordlist))
+guessCounter = 7
 
 # your code begins here!
+
+def main():
+    word = choose_word(wordlist)
+    wordTup, guessTup = word_tuple(word)
+    print word, wordTup, guessTup
+
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    guessLetters = define_tuple(default=letters, sliceDefault=True)
+    print(letters, guessLetters)
+                                
+    print("\n\tLet's play a game of hangman...")
+    print("\n\tI will start, please guess the " + str(len(word)) + " letter word I am thinking of?")
+    print("\n")
+
+    tempStr = ""
+    while True:
+        if guessCounter > 1:
+            tempStr = "es"
+        print("You have " + str(guessCounter) + " guess" + tempStr + " left.")
+        print("You have these characters: " + letters )
+        break
+    
+
+
+
+
+
+main()
+
