@@ -46,18 +46,15 @@ def word_tuple(word):
 
     return tup, guess
 
-def define_tuple(number=0, default=' ', sliceDefault=False):
-    tup = []
-    if sliceDefault:
-        for i in range(len(default) - 1):
-            tup.append(default[i])
-    else:
-        for i in range(number - 1):
-            tup.append(default)
-            
-    return tup
+def createBlank(guessTup):
+    blankWord = ""
+    for i in range(len(guessTup)):
+        blankWord += guessTup[i]
+        blankWord += " "
 
+    return blankWord
 
+        
 # end of helper code
 # -----------------------------------
 
@@ -65,35 +62,86 @@ def define_tuple(number=0, default=' ', sliceDefault=False):
 # the wordlist variable so that it can be accessed from anywhere
 # in the program
 wordlist = load_words()
-guessCounter = 7
 
 # your code begins here!
 
-def main():
+def hangman(REVEAL = False):
+    # Define key variables
+    #   word        This is the word choosen
+    #   wordTup     Tuple of the word, indexed per character
+    #   guessTup    Tuple of the guessed word, initially equal to "_ _ _..." len(wordTup)
+    #   letters     string of lowercase letters [a-z]
+    
     word = choose_word(wordlist)
     wordTup, guessTup = word_tuple(word)
-    print word, wordTup, guessTup
+    letters = string.ascii_lowercase
 
-    letters = "abcdefghijklmnopqrstuvwxyz"
-    guessLetters = define_tuple(default=letters, sliceDefault=True)
-    print(letters, guessLetters)
+    # Debug prints
+    #print wordTup, guessTup
                                 
     print("\n\tLet's play a game of hangman...")
     print("\n\tI will start, please guess the " + str(len(word)) + " letter word I am thinking of?")
-    print("\n")
 
+    # If the REVEAL vari is True, print the word before the game
+    if REVEAL:
+        print("\t\t\t\tThe word is: %s" % (word))
+        
     tempStr = ""
+    guessCounter = 7
     while True:
-        if guessCounter > 1:
-            tempStr = "es"
+        blankWord = createBlank(guessTup)
+        print("\n\t" + blankWord)
+        
         print("You have " + str(guessCounter) + " guess" + tempStr + " left.")
         print("You have these characters: " + letters )
-        break
-    
+
+        # Ask for a valid character [a..z]
+        # Capitilized characters are converted to lowercase
+        while True:
+            char = raw_input("Letter ? ")
+            if char.isupper():
+                print("\tConverting %s to lower-case..." % (char))
+                char = char.lower()
+
+            # Test the char for validity or print warning as to why it isn't
+            if char in string.ascii_lowercase:
+                break
+            else:
+                print("\t%s is not a letter in %s" % (char,string.ascii_lowercase))
+
+        #print(char,letters)
+        if char in letters:
+            # Guess is a previously unguessed letter
+            if char in wordTup:
+                print("\nGood guess!")
+
+                #print(wordTup,guessTup,letters)
+                for loc in range(len(wordTup)):
+                    if wordTup[loc] == char:
+                        wordTup[loc] = "_"
+                        guessTup[loc] = char
+                        letters = letters.replace(char,"")
+                        
+                    #print(wordTup,guessTup,letters)
+            else:
+                print("\tThe character %s is not in the word!" % (char))
+                letters = letters.replace(char,"")
+                guessCounter -= 1
+        else:
+            print("\tYou guessed that already... I won't count against you.")
+            #guessCounter -= 1
+
+        if guessCounter == 0:
+            print("\n\tYou Lost!\n\tThe word is: %s" % (word))
+            break
+        elif guessCounter == 1:
+            print("\tWarning you have only 1 guess left!")
+
+        if "_" not in guessTup:
+            print("\n\tYou Win!")
+            break
 
 
-
-
-
-main()
+# hangman(True) to reveal word before game
+hangman()
 
