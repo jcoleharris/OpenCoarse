@@ -7,7 +7,7 @@
 polynomial = []
 
 # Define debug printing or allow for warning statements:
-DEBUG = False
+DEBUG = True
 WARNING = True
 
 def printDebug(string):
