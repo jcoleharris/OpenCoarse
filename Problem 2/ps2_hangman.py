@@ -131,17 +131,33 @@ def hangman(REVEAL = False):
             print("\tYou guessed that already... I won't count against you.")
             #guessCounter -= 1
 
-        if guessCounter == 0:
-            print("\n\tYou Lost!\n\tThe word is: %s" % (word))
-            break
-        elif guessCounter == 1:
-            print("\tWarning you have only 1 guess left!")
-
         if "_" not in guessTup:
-            print("\n\tYou Win!")
+            print("\n\t%s is the word -- You Win!" % (word.upper()))
+            break
+
+        if guessCounter == 0:
+            print("\n\tYou Lost!\n\tThe word is: %s" % (word.upper()))
+            break
+        elif guessCounter >= 1 and guessCounter < 4:
+            print("\tWarning you have only %i guess left!" % (guessCounter))
+
+def hangman_wrapper(REVEAL = False):
+    while True:
+        hangman(REVEAL)
+
+        validResponses = ['y', 'yes', 'n', 'no']
+        while True:
+            char = raw_input("Play Again? ")
+            if char.isupper():
+                char = char.lower()
+                
+            if char in validResponses:
+                break
+
+        if char == validResponses[2] or char == validResponses[3]:
             break
 
 
 # hangman(True) to reveal word before game
-hangman()
+hangman_wrapper()
 
