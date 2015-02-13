@@ -224,23 +224,20 @@ def compute_root(poly, x_0, epsilon):
     iterate = True
 
     # Find the root
-    while iterate:
-        x0_value = evaluate_poly(poly_0, x_0)
-        if abs(x0_value) <= epsilon:
+    while True:
+        #x0_value = evaluate_poly(poly_0, x_0)
+        if abs(evaluate_poly(poly_0, x_0)) < epsilon:
             iterate = False
+            break
         else:
             iterations += 1
-            xn_value = x_0 - evaluate_poly(poly_0, x_0) / evaluate_poly(poly_1, x_0)
-            print(xn_value,iterations)
-            x_0 = xn_value
+            x_0 = x_0 - evaluate_poly(poly_0, x_0) / evaluate_poly(poly_1, x_0)
 
-    print(x0_value,iterations)
-    returnTuple = [x0_value, iterations]
-    return returnTuple
-    
+        print(x_0)
     #Done
-    return
-
+    print(x_0,iterations)
+    returnTuple = [x_0, iterations]
+    return returnTuple
 
 # Start the ball rolling...
 main()
