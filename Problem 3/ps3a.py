@@ -10,7 +10,7 @@ import string
 
 VOWELS = 'aeiou'
 CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
-HAND_SIZE = 7
+HAND_SIZE = 9
 
 SCRABBLE_LETTER_VALUES = {
     'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4,
@@ -80,13 +80,13 @@ def get_word_score(word, n):
     word: string (lowercase letters)
     returns: int >= 0
     """
-    print(word)
+    #print(word)
     
     score = 0
     multiplier = len(word)
     for char in word:
         score += SCRABBLE_LETTER_VALUES[char]
-        print(char,score)
+        #print(char,score)
 
     score *= multiplier
     
@@ -162,7 +162,16 @@ def update_hand(hand, word):
     hand: dictionary (string -> int)    
     returns: dictionary (string -> int)
     """
-    # TO DO ...
+
+    for letter in word:
+        hand[letter] -= 1
+
+        if hand[letter] == 0:
+            del hand[letter]
+
+    #print hand
+    return hand
+  
 
 #
 # Problem #3: Test word validity
@@ -177,7 +186,31 @@ def is_valid_word(word, hand, word_list):
     hand: dictionary (string -> int)
     word_list: list of lowercase strings
     """
-    # TO DO...
+
+    passTest = True
+    hand2 = {}
+    if word in word_list:
+        for letter in word:
+            #print letter
+            if letter in hand2:
+                hand2[letter] += 1
+            else:
+                hand2[letter] = 1
+        for h in hand2:
+            if h in hand:
+                #print("%s - %s:%s" % (h,hand2[h],hand[h]))
+                if hand2[h] > hand[h]:
+                    passTest = False
+            else:
+                passTest = False
+        if not passTest:
+            print("Your hand does not contain the correct letter for the word %s!" % (word))
+    else:
+        print("The word %s was not found in the list of valid words, check spelling." % (word))
+        passTest = False
+
+    return passTest
+
 
 def calculate_handlen(hand):
     handlen = 0
@@ -216,7 +249,25 @@ def play_hand(hand, word_list):
       word_list: list of lowercase strings
       
     """
-    # TO DO ...
+    score = 0
+
+    while True:
+        display_hand(hand)
+        
+        while True:
+            word = raw_input("Word? ")
+            word = word.lower()
+
+            if word == '.':
+                print("Your final Score = %i" % (score))
+                return
+            
+            if is_valid_word(word, hand, word_list):
+                break
+        s = get_word_score(word, HAND_SIZE)
+        score += s
+        print("%s is worth %i score [Score = %i]" % (word, s, score))
+        hand = update_hand(hand, word)
 
 #
 # Problem #5: Playing a game
@@ -237,7 +288,32 @@ def play_game(word_list):
 
     * If the user inputs anything else, ask them again.
     """
-    # TO DO...
+
+    validResponses = ['n', 'new', 'r', 'replay', 'e', 'exit']
+    while True:
+        while True:
+            choice = raw_input("\nNew game, Replay, Exit? (n/r/e) ")
+            choice = choice.lower()
+
+            if choice in validResponses:
+                break
+            else:
+                print("Huh?  Not a valid response.\n")
+
+        #print choice[0]
+        if choice[0] == 'n':
+            print("\tNew Game!\n")
+            
+            main_hand = deal_hand(HAND_SIZE)
+            play_hand(main_hand,word_list)
+            
+        elif choice[0] == 'r':
+            print("\tReplay Last Hand!\n")
+            play_hand(main_hand,word_list)
+        else:
+            print("\tExit Game!\n")
+            break
+        
 
 #
 # Build data structures used for entire session and play game

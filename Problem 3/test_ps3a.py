@@ -92,6 +92,19 @@ def test_update_hand():
 
         return # exit function
         
+    # test 1a
+    hand = {'a':1, 'q':1, 'l':2, 'm':1, 'u':1, 'i':1}
+    word = "quill"
+
+    hand2 = update_hand(hand.copy(), word)
+    expected_hand1 = {'a':1, 'm':1}
+    expected_hand2 = {'a':1, 'q':0, 'l':0, 'm':1, 'u':0, 'i':0}
+    if hand2 != expected_hand1 and hand2 != expected_hand2:
+        print "FAILURE: test_update_hand('"+ word +"', " + str(hand) + ")"
+        print "\tReturned: ", hand2, "-- but expected:", expected_hand1, "or", expected_hand2
+
+        return # exit function
+    
     # test 2
     hand = {'e':1, 'v':2, 'n':1, 'i':1, 'l':2}
     word = "evil"
