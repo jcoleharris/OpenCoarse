@@ -80,13 +80,11 @@ def get_word_score(word, n):
     word: string (lowercase letters)
     returns: int >= 0
     """
-    #print(word)
-    
+
     score = 0
     multiplier = len(word)
     for char in word:
         score += SCRABBLE_LETTER_VALUES[char]
-        #print(char,score)
 
     score *= multiplier
     
@@ -163,14 +161,27 @@ def update_hand(hand, word):
     returns: dictionary (string -> int)
     """
 
-    for letter in word:
-        hand[letter] -= 1
+    # Create a new_hand = word
+    new_hand = get_frequency_dict(word)
 
-        if hand[letter] == 0:
-            del hand[letter]
+    # Itterate over keys in hand:
+    # - If key (of hand) is not in new_hand, add it to new_hand
+    # - If key is in new_hand, set value = hand[key] - new_hand[key]
+    for key in hand:
+        if key not in new_hand:
+            new_hand[key] = hand[key]
+        else:
+            new_hand[key] = hand[key] - new_hand[key]
+    return new_hand
 
-    #print hand
-    return hand
+##    for letter in word:
+##        hand[letter] -= 1
+##
+##        if hand[letter] == 0:
+##            del hand[letter]
+##
+##    #print hand
+##    return hand
   
 
 #
@@ -191,14 +202,12 @@ def is_valid_word(word, hand, word_list):
     hand2 = {}
     if word in word_list:
         for letter in word:
-            #print letter
             if letter in hand2:
                 hand2[letter] += 1
             else:
                 hand2[letter] = 1
         for h in hand2:
             if h in hand:
-                #print("%s - %s:%s" % (h,hand2[h],hand[h]))
                 if hand2[h] > hand[h]:
                     passTest = False
             else:
@@ -254,7 +263,7 @@ def play_hand(hand, word_list):
     while True:
         display_hand(hand)
         
-        while True:
+        while hand != {}:
             word = raw_input("Word? ")
             word = word.lower()
 
@@ -288,8 +297,9 @@ def play_game(word_list):
 
     * If the user inputs anything else, ask them again.
     """
-
+    main_hand = {}
     validResponses = ['n', 'new', 'r', 'replay', 'e', 'exit']
+
     while True:
         while True:
             choice = raw_input("\nNew game, Replay, Exit? (n/r/e) ")
@@ -300,7 +310,6 @@ def play_game(word_list):
             else:
                 print("Huh?  Not a valid response.\n")
 
-        #print choice[0]
         if choice[0] == 'n':
             print("\tNew Game!\n")
             
@@ -309,6 +318,8 @@ def play_game(word_list):
             
         elif choice[0] == 'r':
             print("\tReplay Last Hand!\n")
+            if main_hand == {}:
+                main_hand = deal_hand(HAND_SIZE)
             play_hand(main_hand,word_list)
         else:
             print("\tExit Game!\n")
